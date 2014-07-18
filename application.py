@@ -8,10 +8,10 @@ import configparser
 
 class Application:
     """
-    Application Class for the main plugin.
+    Application Class calling the first plugins.
     """
     
-    def __init__(self, path, host, port, debug=False, reloader=False):
+    def __init__(self):
         """
         Init method.
         Looks for plugins' and run WebServer.
@@ -20,26 +20,36 @@ class Application:
         MAIN_MODULE = '__init__'
         
         self._plugins = {}
-        self._path = path
-        get(path)(self.portal)
-        get(path + 'index.htm')(self.portal)
-        get(path + 'index.html')(self.portal)
+        self._path = '/'
         
-# load plugins
+# load all (!) plugins
         for plugin in os.listdir(PLUGINS_FOLDER):
             location = os.path.join(PLUGINS_FOLDER, plugin)
             if not os.path.isdir(location) or \
                not MAIN_MODULE + '.py' in os.listdir(location):
                 continue
             info = imp.find_module(MAIN_MODULE, [location]) 
-            try:
-                self._plugins[plugin] = imp.load_module(MAIN_MODULE, *info).run()
-            except AttributeError as e:
-                print("Plugin '{}' MUST have a run() method. Plugin ignored.".format(plugin))
+            print("Loading plugin " + plugin + str(info))
+            self._plugins[plugin] = imp.load_module(MAIN_MODULE, *info);
+#            print("Done with " + str(self._plugins[plugin]))
+            
+    def run(self, host, port, debug=False, reloader=False, interval=1):
+    
+        print(list(enumerate(self._plugins)))        
 
-    def run(self):
+        p = self._plugins['shoutcast']
+        print(p) 
+
+        pb = self._plugins.get('piratebox1.0').run()
+        print(list(enumerate(pb)))
+        
+        get(self._path)(pb.page)
+        get(self._path + 'index.htm')(pb.page)
+        get(self._path + 'index.html')(pb.page)        
+
 # run the web server
-        run(host=host, port=port, debug=debug, reloader=reloader)
+        run(host=host, port=port, debug=debug, reloader=reloader, interval=interval)
+
 
     def portal(self):
         
@@ -120,12 +130,22 @@ def staticFiles(filepath):
     return static_file(filepath, root='./www/')
 
 if __name__ == '__main__':
+#    config = configparser.ConfigParser(allow_no_value=True)  # for plugins' name
     config = configparser.ConfigParser()
     config.read('application.cfg')
     
-    port = int(os.environ.get('PORT', config.getint('server','port', 8080)))
-    app = Application('/', host='0.0.0.0', port=port, debug=True, reloader=True)
-    app.run()
+    configServer = config['server']
+    
+    app = Application()
+    
+    port = int(os.environ.get('PORT', configServer.get('port', 8080)))
+    app.run( 
+        host=configServer.get('host', '0.0.0.0'), 
+        port=port, 
+        debug=configServer.getboolean('debug', False), 
+        reloader=(int(configServer.get('reloader', 0)) > 0),
+        interval=int(configServer.get('reloader', 0))
+    )
 
     
     
