@@ -21,6 +21,8 @@
 		<div id="menu-icon"><img src="menu.png" alt="Menu" /></div>
 		<nav id="top-nav">
 			<ul>
+				<li><a href="/" class="current">{{homeMenu}}</a>
+			
 % for item in topNav:
 				<li><a href="{{item['address']}}"\\
     % if 'class' in item:
@@ -37,6 +39,7 @@
     % end
 >{{!item['text']}}</a></li>
 % end
+				<li><a href="#about">{{aboutMenu}}</a>
 			</ul>
 		</nav>
 	</div>
@@ -111,7 +114,9 @@
 
 <footer id="about">
 	<div class="container">
-	   {{!footer}}
+        <p class="to-top"><a href="#header">Back to top</a></p>
+        <h2>{{footerTitle}}</h2>
+        {{!footerContent}}
 	</div>
 </footer>
 
