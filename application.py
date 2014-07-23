@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
+from __future__ import print_function
+
+import os, sys
 from importlib import import_module
-from importlib.util import find_spec
 from bottle import route, get, run, template, static_file
-import configparser
+import ConfigParser
 from gettext import gettext as _
 
 class Application:
@@ -30,15 +31,19 @@ class Application:
             if not os.path.isdir(location) or \
                not MAIN_MODULE + '.py' in os.listdir(location):
                 continue
+            cmd_folder = os.path.abspath(location)
+            if cmd_folder not in sys.path:
+                sys.path.insert(0, cmd_folder)
+            
             print(_("Loading plugin %s... " % (str(plugin))), end='')
-            self._plugins[plugin] = import_module(location.replace('\\', '.') + '.' + MAIN_MODULE)
+            self._plugins[plugin] = import_module(MAIN_MODULE)
             print(_("Ok."))
             
     def run(self, plugins, host, port, debug=False, reloader=False, interval=1):
-        for plugin in plugins:
-            print(_("Running plugin %s... " % (str(plugin))), end='')
-            self._plugins[plugin].run(self, self._path)
-            print(_("Ok."))
+#        for plugin in plugins:
+#            print(_("Running plugin %s... " % (str(plugin))), end='')
+#            self._plugins[plugin].run(self, self._path)
+#            print(_("Ok."))
 
 # run the web server
         run(host=host, port=port, debug=debug, reloader=reloader, interval=interval)
@@ -49,20 +54,25 @@ def staticFiles(filepath):
 
 if __name__ == '__main__':
 #    config = configparser.ConfigParser(allow_no_value=True)  # for plugins' name
-    config = configparser.ConfigParser(allow_no_value=True)
+    config = ConfigParser.RawConfigParser({
+            'host': '0.0.0.0',
+            'port': 80,
+            'debug': 'false',
+            'reloader': 0 
+        }, 
+        allow_no_value=True)
     config.read('application.cfg')
-    configServer = config['server']
     
     app = Application()
-    
-    port = int(os.environ.get('PORT', configServer.get('port', 8080)))
+        
+    port = int(os.environ.get('PORT', config.getint('server', 'port')))
     app.run(
-        plugins=config['plugins'], 
-        host=configServer.get('host', '0.0.0.0'), 
+        plugins=config.items('plugins'), 
+        host=config.get('server', 'host'), 
         port=port, 
-        debug=configServer.getboolean('debug', False), 
-        reloader=(int(configServer.get('reloader', 0)) > 0),
-        interval=int(configServer.get('reloader', 0))
+        debug=config.getboolean('server', 'debug'), 
+        reloader=(config.getint('server', 'reloader') > 0),
+        interval=config.getint('server', 'reloader')
     )
 
     
