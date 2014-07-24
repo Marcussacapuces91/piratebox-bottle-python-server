@@ -2,51 +2,50 @@
 # -*- coding: utf-8 -*-
 
 from bottle import route, get, run, template, static_file, request
-from gettext import translation, find
+# from gettext import translation, find
 import os
 
 class PirateBox10():
     def __init__(self, application):
         self._application = application
 
-    def getTranslation(self, acceptlanguage):
-        r = []
-        for langue in acceptlanguage.split(','):
-            try:
-                l, q = langue.split(';')
-            except ValueError:
-                l = langue
-            r.append(l)
-        return translation('piratebox10', os.path.join(os.path.dirname(__file__), 'locale'), languages=r)  
+#    def getTranslation(self, acceptlanguage):
+#        r = []
+#        for langue in acceptlanguage.split(','):
+#            try:
+#                l, q = langue.split(';')
+#            except ValueError:
+#                l = langue
+#            r.append(l)
+#        return translation('piratebox10', os.path.join(os.path.dirname(__file__), 'locale'), languages=r)  
 
+    def staticfiles(self, file):
+        return static_file(file, root='./plugins/piratebox10/www/')
 
     def page(self):
-        t = self.getTranslation(request.headers['Accept-Language'])        
-        if t == None:
-            _ = lambda text: text
-        else:
-            _ = t.gettext
+#        t = self.getTranslation(request.headers['Accept-Language'])        
+#        if t == None:
+#            _ = lambda text: text
+#        else:
+#            _ = t.gettext
     
 #        menuWelcome = self._plugins['welcome'].getMenu(language='')
     
         return template(os.path.join(os.path.dirname(__file__), 'index'),  
-            webTitle = _('PirateBox - Share Freely'),
-            iconTitle = _('PirateBox - Share Freely'),
-            homeMenu = _('Home'), 
+            homeMenu = ('Home'), 
             topNav =  [{
                 'address': '/board', 
-                'text': _('Forum')
+                'text': ('Forum')
             },{
                 'address': '/Shared', 
-                'text': _('Files')
+                'text': ('Files')
             }],
-            aboutMenu = _('About'),
             contents = [{
                 'block': 'top',
                 'id': 'welcome',
-                'title': _('Welcome'),
+                'title': ('Welcome'),
                 'div': 
-                _("""<p>Now, first of all, there is nothing illegal or scary going on 
+                ("""<p>Now, first of all, there is nothing illegal or scary going on 
                 here. This is a social place where you can chat and share files 
                 with people around you, <strong>anonymously</strong>! This is an 
                 off-line network, specially designed and developed for 
@@ -87,8 +86,8 @@ class PirateBox10():
 					</div>
 				</form>"""
             }],
-            footerTitle = _("About PirateBox"),
-            footerContent = _(
+            footerTitle = ("About PirateBox"),
+            footerContent = (
 		"""<p>Inspired by pirate radio and the free culture movment, PirateBox is a self-contained mobile collaboration and file sharing device. PirateBox utilizes Free, Libre and Open Source software (FLOSS) to create mobile wireless file sharing networks where users can anonymously share images, video, audio, documents, and other digital content.</p>
 		<p>PirateBox is designed to be safe and secure. No logins are required and no user data is logged. The system is purposely not connected to the Internet in order to prevent tracking and preserve user privacy.</p>
 		<small>PirateBox is licensed under GPLv3.</small>""")
@@ -98,6 +97,8 @@ def run(application, path):
     pb = PirateBox10(application)
     get(path)(pb.page)
     get(path + 'index.htm')(pb.page)
-    get(path + 'index.html')(pb.page)        
+    get(path + 'index.html')(pb.page)     
+    get(path + 'piratebox10/<file:path>')(pb.staticfiles)   
+
     
     return pb  

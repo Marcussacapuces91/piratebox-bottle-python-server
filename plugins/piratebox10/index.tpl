@@ -2,10 +2,12 @@
 <html>
 <head>
 	<link rel="stylesheet" href="style.css" />
-	<title>{{webTitle}}</title>
+	<link rel="localization" href="piratebox10/manifest.json" />
+	<title data-l10n-id="page_title">PirateBox - Share Freely</title>
 	<script src="jquery.min.js"></script>
 	<script src="scripts.js"></script>
-	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" />
+	<script src="l20n.min.js"></script>
 </head>
 <body>
 
@@ -13,15 +15,15 @@
 	<div class="container">
 		<div id="logo">
 			<h1>
-				<a href="/">
-					<img src="piratebox-logo-horizontal-white.png" alt="PirateBox" title="{{iconTitle}}" />
+				<a href="/" data-l10n-id="logo_title">
+					<img src="piratebox-logo-horizontal-white.png" alt="PirateBox" title="PirateBox - Share Freely" />
 				</a>
 			</h1>
 		</div>
 		<div id="menu-icon"><img src="menu.png" alt="Menu" /></div>
 		<nav id="top-nav">
 			<ul>
-				<li><a href="/" class="current">{{homeMenu}}</a>
+				<li><a href="/" class="current" data-l10n-id="home_menu">Home</a>
 			
 % for item in topNav:
 				<li><a href="{{item['address']}}"\\
@@ -39,7 +41,7 @@
     % end
 >{{!item['text']}}</a></li>
 % end
-				<li><a href="#about">{{aboutMenu}}</a>
+				<li><a href="#about" data-l10n-id="about_menu">About</a>
 			</ul>
 		</nav>
 	</div>
@@ -112,7 +114,7 @@
 	</div>
 </section>
 
-<footer id="about">
+<footer id="about" data-l10n-id="footer">
 	<div class="container">
         <p class="to-top"><a href="#header">Back to top</a></p>
         <h2>{{footerTitle}}</h2>
