@@ -50,17 +50,24 @@
 <section id="content">
 	<div class="container">
         <div id="top">
-            <div id="welcome" class="card" data-l10n-id="welcome_block">
-                <h2>Welcome</h2>
-                <p>Now, first of all, there is nothing illegal or scary going on 
-                here. This is a social place where you can chat and share files 
-                with people around you, <strong>anonymously</strong>! This is an 
-                off-line network, specially designed and developed for 
-                file-sharing and chat services. Staying off the grid is a 
-                precaution to maintain your full anonymity. Please have fun, 
-                chat with people, and feel free to share any files you may like.</p>
-                <input id="thanks" class="button" type="submit" value="Thanks" />
+% for item in contents:	
+    % if item['block'] == 'top':   
+		    <div\\
+        % if 'id' in item:
+ id="{{item['id']}}"\\
+        % end
+ class="card\\
+        % if 'class' in item:
+,{{item['class']}}\\
+        % end
+">
+        % if 'title' in item:
+			    <h2>{{item['title']}}</h2>
+        % end
+                {{!item['div']}}
             </div>
+    %end        
+%end	   
         </div>
 
         <div id="sidebar">
@@ -107,19 +114,11 @@
 	</div>
 </section>
 
-<footer id="about">
-	<div class="container" data-l10n-id="footer_block">
+<footer id="about" data-l10n-id="footer">
+	<div class="container">
         <p class="to-top"><a href="#header">Back to top</a></p>
-        <h2>About PirateBox</h2>
-        <p>Inspired by pirate radio and the free culture movment, PirateBox is a 
-        self-contained mobile collaboration and file sharing device. PirateBox 
-        utilizes Free, Libre and Open Source software (FLOSS) to create mobile 
-        wireless file sharing networks where users can anonymously share images, 
-        video, audio, documents, and other digital content.</p>
-		<p>PirateBox is designed to be safe and secure. No logins are required 
-        and no user data is logged. The system is purposely not connected to the 
-        Internet in order to prevent tracking and preserve user privacy.</p>
-		<p style="font-size: small">PirateBox is licensed under GPLv3.</p>
+        <h2>{{footerTitle}}</h2>
+        {{!footerContent}}
 	</div>
 </footer>
 

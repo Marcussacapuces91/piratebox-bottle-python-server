@@ -5,6 +5,7 @@
   ],
   "default_locale": "en",
   "resources": [
-    "/piratebox10/{{locale}}/strings.l20n"
+    "/piratebox10/{{locale}}/strings.l20n",
+    "/piratebox10/{{locale}}/date.l20n"
   ]
 }
