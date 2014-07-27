@@ -5,7 +5,6 @@ from __future__ import print_function
 from bottle import route, get, run, template, static_file, request
 import os
 
-
 class PirateBox10():
     def __init__(self, application, path):
         self._application = application
@@ -18,9 +17,7 @@ class PirateBox10():
         return static_file(file, root='./plugins/piratebox10/www/')
 
     def page(self):
-#        return template(os.path.join(os.path.dirname(__file__), 'index'),  
-        print('File = {}'.format(__file__))  
-        return template('index',  
+        return template('plugins/piratebox10/index',  
             homeMenu = ('Home'), 
             topNav =  [{
                 'address': '/board', 

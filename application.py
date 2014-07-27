@@ -16,7 +16,7 @@ class Application:
     def __init__(self):
         """
         Init method.
-        Looks for plugins' and run WebServer.
+        Looks for plugins' and load them all.
         """
         PLUGINS_FOLDER = 'plugins'
         MAIN_MODULE = '__init__'
