@@ -1,18 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 
 from bottle import route, get, run, template, static_file, request
 import os
 
+
 class PirateBox10():
-    def __init__(self, application):
+    def __init__(self, application, path):
         self._application = application
+        print("Instancing plugin shoutbox... ", end='')
+        self._shoutbox = application.getPlugin('shoutbox', path)
+        if self._shoutbox == None: 
+            raise Exception('The shoubox plugin is not running !')
 
     def staticfiles(self, file):
         return static_file(file, root='./plugins/piratebox10/www/')
 
     def page(self):
-        return template(os.path.join(os.path.dirname(__file__), 'index'),  
+#        return template(os.path.join(os.path.dirname(__file__), 'index'),  
+        print('File = {}'.format(__file__))  
+        return template('index',  
             homeMenu = ('Home'), 
             topNav =  [{
                 'address': '/board', 
@@ -35,29 +43,13 @@ class PirateBox10():
             },{
                 'block': 'main',
                 'id': 'chat',
-                'title': 'Chat',
-                'div':
-                """<div id="shoutbox" class="shoutbox_content"></div>
-				<form method="POST" name="psowrte" id="sb_form" >
-					<div id="shoutbox-input">
-						<input class="nickname" type="text" 	name="name" 	value="Anonymous" placeholder="Nickname">
-						<input class="message" 	type="text" 	name="data" 	placeholder="Message...">
-						<input class="button" 	type="submit" 	name="submit" 	value="Send">
-					</div>
-					<div id="shoutbox-options">
-						<h3>Text Color:</h3>
-						<label for="def" 	class="bg-black">	<input name="color" type="radio" value="def" 	id="def" checked>Default</label>
-						<label for="blue" 	class="bg-blue">	<input name="color" type="radio" value="blue" 	id="blue"		>Blue</label>
-						<label for="green" 	class="bg-green">	<input name="color" type="radio" value="green" 	id="green"		>Green</label>
-						<label for="orange" class="bg-orange">	<input name="color" type="radio" value="orange" id="orange"		>Orange</label>
-						<label for="red" 	class="bg-red">		<input name="color" type="radio" value="red" 	id="red"		>Red</label>
-					</div>
-				</form>"""
+                'title': self._shoutbox.getTitle(),
+                'div': self._shoutbox.getHTML()
             }]
 		)
         
 def run(application, path):
-    pb = PirateBox10(application)
+    pb = PirateBox10(application, path)
     get(path)(pb.page)
     get(path + 'index.htm')(pb.page)
     get(path + 'index.html')(pb.page)     

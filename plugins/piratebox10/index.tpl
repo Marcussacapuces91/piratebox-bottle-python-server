@@ -5,7 +5,7 @@
 	<link rel="localization" href="piratebox10/manifest.json" />
 	<title data-l10n-id="page_title">PirateBox - Share Freely</title>
 	<script src="jquery.min.js"></script>
-	<script src="scripts.js"></script>
+	<script src="piratebox10/scripts.js"></script>
 	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width" />
 	<script src="l20n.min.js"></script>
 </head>

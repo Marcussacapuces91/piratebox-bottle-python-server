@@ -4,7 +4,7 @@
 from __future__ import print_function
 
 import os, sys
-from importlib import import_module
+from imp import find_module, load_module
 from bottle import route, get, run, template, static_file
 import ConfigParser
 
@@ -21,31 +21,44 @@ class Application:
         PLUGINS_FOLDER = 'plugins'
         MAIN_MODULE = '__init__'
         
-        self._plugins = {};
+        self._run = {}
         self._path = '/'
         
 # load all (!) plugins
         for plugin in os.listdir(PLUGINS_FOLDER):
+            # Fast path: see if the module has already been imported.
+            try:
+                self._modules[plugin] = sys.modules[plugin]
+                # silently pass
+                continue
+            except KeyError:
+                pass
+        
+            # Search for module's path        
             location = os.path.join(PLUGINS_FOLDER, plugin)
             if not os.path.isdir(location) or \
                not MAIN_MODULE + '.py' in os.listdir(location):
                 continue
-            cmd_folder = os.path.abspath(location)
-            if cmd_folder not in sys.path:
-                sys.path.insert(0, cmd_folder)
-            
             try:
+                path = [os.path.abspath(location)] 
                 print("Loading plugin {}... ".format(plugin), end='')
-                self._plugins[plugin] = import_module(MAIN_MODULE)
-                print("Ok.")
+                f, filename, description = find_module(MAIN_MODULE, path)
+                try:
+                    self._run[plugin] = load_module(MAIN_MODULE, f, filename, description).run
+                    print("Ok.")
+                finally:
+                    if f: f.close()
             except Exception as e:
                 print("KO with exception {}.".format(e))
-            
+                
+    def getPlugin(self, name, path):
+        return (self._run[name])(self, path)
+
     def run(self, plugins, host, port, debug=False, reloader=False, interval=1):
         for plugin in plugins:
             try:
-                print("Running plugin {}... ".format(plugin[0]), end='')
-                self._plugins[plugin[0]].run(self, self._path)
+                print("Instancing plugin {}... ".format(plugin[0]), end='')
+                self.getPlugin(plugin[0], self._path)
                 print("Ok.")
             except KeyError as e:
                 print("KO : Can't find {}.".format(e))
