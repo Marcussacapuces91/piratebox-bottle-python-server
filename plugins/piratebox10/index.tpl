@@ -97,7 +97,7 @@
         % end
 ">
         % if 'title' in item:
-			    <h2>{{item['title']}}</h2>
+			    <h2 data-l10n-id="plugin_{{item['name']}}_title">{{item['title']}}</h2>
         % end
                 {{!item['div']}}
             </div>

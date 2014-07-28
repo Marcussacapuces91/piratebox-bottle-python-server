@@ -27,6 +27,7 @@ class PirateBox10():
                 'text': ('Files')
             }],
             contents = [{
+                'name': 'upload',
                 'block': 'sidebar',
                 'id': 'upload',
 				'title': 'Upload',
@@ -38,6 +39,7 @@ class PirateBox10():
 				</iframe>
 				<h3><a href="/Shared">Browse Files -></a></h3>"""
             },{
+                'name': 'shoutbox',
                 'block': 'main',
                 'id': 'chat',
                 'title': self._shoutbox.getTitle(),

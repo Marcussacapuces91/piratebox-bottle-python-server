@@ -29,3 +29,16 @@
         Internet in order to prevent tracking and preserve user privacy.</p>
 		<p style="font-size: small">PirateBox is licensed under GPLv3.</p>
 """>
+
+<plugin_shoutbox_title "Chat">
+<shoutbox_input_block """
+						<input class="nickname" type="text" 	name="name" 	value="Anonymous" placeholder="Nickname" />
+						<input class="message" 	type="text" 	name="data" 	placeholder="Message..." />
+						<input class="button" 	type="submit" 	name="submit" 	value="Send" />
+""">
+<shoutbox_color_title "Text color:">
+<shoutbox_default """<input name="color" type="radio" value="def"    id="def" checked />Deflaut""">
+<shoutbox_blue    """<input name="color" type="radio" value="blue"   id="blue"		  />Blue""">
+<shoutbox_green   """<input name="color" type="radio" value="green"  id="green"		  />Green""">
+<shoutbox_orange  """<input name="color" type="radio" value="orange" id="orange"	  />Orange""">
+<shoutbox_red     """<input name="color" type="radio" value="red" 	 id="red"		  />Red""">

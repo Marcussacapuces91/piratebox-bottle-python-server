@@ -40,3 +40,16 @@
         <p style="font-size: small">La <strong>PirateBox</strong> est sous licence GPLv3.<br/>
         <sup>1</sup>&nbsp: <i>Free</i>, Libre <i>and Open Source Software</i></p>
 """>
+
+<plugin_shoutbox_title "Chat <small>(Clavardage)</small>">
+<shoutbox_input_block """
+						<input class="nickname" type="text"   name="name"   value="Anonyme" placeholder="Surnom" />
+						<input class="message" 	type="text"   name="data"   placeholder="Message..." />
+						<input class="button" 	type="submit" name="submit" value="Envoi" />
+""">
+<shoutbox_color_title "Couleur du texte&nbsp;:">
+<shoutbox_default """<input name="color" type="radio" value="def"    id="def" checked />Défaut""">
+<shoutbox_blue    """<input name="color" type="radio" value="blue"   id="blue"		  />Bleu""">
+<shoutbox_green   """<input name="color" type="radio" value="green"  id="green"		  />Vert""">
+<shoutbox_orange  """<input name="color" type="radio" value="orange" id="orange"	  />Orange""">
+<shoutbox_red     """<input name="color" type="radio" value="red" 	 id="red"		  />Rouge""">
