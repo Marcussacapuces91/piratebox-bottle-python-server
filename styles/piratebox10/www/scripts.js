@@ -1,5 +1,3 @@
-/// @TODO : keep only piratebox10 needed scripts, remove shoutbox
-
 $(document).ready(function() {
    	// do stuff when DOM is ready
    	$.get('forum.html', function(data) {
@@ -14,17 +12,17 @@ $(document).ready(function() {
         $('div#station').html(data);
     });
    	
-   	$('div#shoutbox').ajaxError(function() {
-        $(this).text( "Triggered ajaxError handler on shoutbox" );
-    });
+//   	$('div#shoutbox').ajaxError(function() {
+//        $(this).text( "Triggered ajaxError handler on shoutbox" );
+//    });
 	
-	$("#sb_form").submit(function(event) {
-	    /* stop form from submitting normally */
-        event.preventDefault();
-	    post_shoutbox();
-    });
+//	$("#sb_form").submit(function(event) {
+//	    /* stop form from submitting normally */
+//        event.preventDefault();
+//	    post_shoutbox();
+//    });
 
-    display_shoutbox();
+//    display_shoutbox();
 
     // Spin menu icon and toggle nav
     $('#menu-icon').click(function() {

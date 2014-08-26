@@ -1,0 +1,10 @@
+<shared_menu "Files">
+<shared_index_of "Index of">
+<shared_dir_listing "Directory listing">
+<shared_parent_dir "Parent Directory">
+<shared_headers """
+                <th class="n">Name</th>
+                <th class="m">Last Modified</th>
+                <th class="s">Size</th>
+                <th class="t">Type</th>
+""">

@@ -1,0 +1,12 @@
+<shared_menu "Fichiers">
+<shared_index_of "Liste de">
+<shared_dir_listing "Contenu du répertoire">
+<shared_parent_dir "Répertoire parent">
+<shared_headers """
+                <th class="n">Nom</th>
+                <th class="m">Dernière modif.</th>
+                <th class="s">Taille</th>
+                <th class="t">Type</th>
+""">
+
+

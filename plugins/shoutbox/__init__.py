@@ -3,29 +3,56 @@
 
 from __future__ import print_function
 
-from bottle import post, get, response # route, get, run, template, static_file, request
+from bottle import Bottle, post, get, response, HTTPError # route, get, run, template, static_file, request
 from datetime import datetime
 
 import hashlib
 
 
-class ShoutBox():
-    def __init__(self, application, path):
+class ShoutBox(Bottle):
+    def __init__(self, application):
+        Bottle.__init__(self)
         self._application = application
-        self._path = path
+        self._path = '/shoutbox'
         self._chat = [(datetime.now(), "PirateBox", "Chat and share files anonymously!", "def")]
         self._etag = hashlib.sha1(str(self._chat)).hexdigest()
 
-    def getMenu(self):
-        return Null
-        
-    def getTitle(self):
-        return 'Chat'
-        
+        self.get('/content')(self._getContent)
+        self.post('/line')(self._addLine)
+
+    def getTopNav(self):
+        return None
+
+    def getLocales(self):
+        return None
+
     def getHTML(self):
         return """
+                <h2>Chat</h2>
 				<div id="shoutbox" class="shoutbox_content"></div>
-				<form method="POST" name="psowrte" id="sb_form" >
+                <script language="javascript">
+
+function displayShoutbox() {
+    $.get('/shoutbox/content', function(data) {
+   	    $('div#shoutbox').html(data);
+        mytime=setTimeout('displayShoutbox()', 10000);
+   	});
+}
+
+function sendChat() {
+	$.post("/shoutbox/line" , $("#sb_form").serialize())
+	.success(function() {
+		displayShoutbox();
+	});
+	$('#shoutbox-input .message').val('');
+}
+
+$('div#shoutbox').ready(function() {
+    displayShoutbox();
+});
+
+                </script>
+				<form method="POST" name="psowrte" id="sb_form" action="javascript:sendChat();">
 					<div id="shoutbox-input" data-l10n-id="shoutbox_input_block">                                     
 						<input class="nickname" type="text" 	name="name" 	placeholder="Nickname" value="Anonymous"/>
 						<input class="message" 	type="text" 	name="data" 	placeholder="Message..." />
@@ -42,28 +69,22 @@ class ShoutBox():
 				</form>
 """        
 
-    def psowrte(self):
+    def _addLine(self):
         now = datetime.now()
         name = request.forms.get('name')
         data = request.forms.get('data')
         color = request.forms.get('color')
         self._chat.append((now, name, data, color))
         self._etag = hashlib.sha1(str(self._chat)).hexdigest()
-        response.status = 204
-        return        
+        raise HTTPError(204)
 
-    def chat_content(self):
+    def _getContent(self):
         if request.get_header('If-None-Match') == self._etag:
-            response.status=304
-            return            
+            raise HTTPError(304)
         response.set_header('ETag', self._etag)
         return template('plugins/shoutbox/chat_content', chat=self._chat)   
         
         
-def run(application, path):
-    sb = ShoutBox(application, path)
-    
-    post('/cgi-bin/psowrte.py')(sb.psowrte)
-    get('/chat_content.html')(sb.chat_content)
-    
-    return sb  
+def factory(application, options):
+    sb = ShoutBox(application)
+    return sb
